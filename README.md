@@ -37,7 +37,11 @@ npm run typecheck
 
 ## Editing content
 
-- **Pages** — edit text and `<img>` sources directly in
+- **Blog, works & services** — MDX content collections in `src/content/blog/*.mdx`,
+  `src/content/works/*.mdx` and `src/content/services/*.mdx` (YAML frontmatter +
+  Markdown body). Add or edit a file and the listing links + `[slug]` detail route
+  pick it up automatically (loader in `src/lib/content.ts`).
+- **Other pages** — edit text and `<img>` sources directly in
   `src/app/<route>/page.tsx`. Each page mirrors the original template markup.
 - **Theme** — edit the CSS custom properties at the top of
   `public/assets/css/styles.css`.
@@ -48,11 +52,20 @@ npm run typecheck
 ```
 src/
   app/                 one folder per route (page.tsx)
+    blog/[slug]        blog detail template (MDX)
+    work/[slug]        project detail template (MDX)
+    service/[slug]     service detail template (MDX)
     layout.tsx         shared shell: stylesheet links, Header, Footer, cart, scripts
     not-found.tsx      404 boundary
   components/
     layout/            header.tsx, footer.tsx, cart-modal.tsx
+    ui/                mdx-body.tsx
     clavo-scripts.tsx  client interaction layer
+  content/
+    blog/*.mdx         6 blog posts
+    works/*.mdx        9 projects
+    services/*.mdx     5 services
+  lib/content.ts       MDX collection loader
 public/
   assets/css|fonts|images   original template assets
 ```
