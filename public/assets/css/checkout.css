@@ -1,0 +1,243 @@
+/* ============================================================================
+   Clavo — checkout / order-confirmation layout enhancement
+   ----------------------------------------------------------------------------
+   The template ships these pages with the Webflow-commerce classes stripped out,
+   so the original styles.css rules (.w-commerce-*) no longer match anything and
+   the form renders unstyled. This sheet restyles the existing (class-less) markup
+   using Clavo's own design tokens — spacing, radius, colours, Inter Tight — so the
+   checkout reads as part of the same design system. Loaded after styles.css; the
+   original stylesheet is left untouched.
+   ========================================================================== */
+
+.checkout-form,
+.paypal-checkout-form,
+.order-confirmation {
+  padding-bottom: var(--_spacing---spacing-xxbig, 80px);
+}
+
+.checkout-form > .container.container,
+.paypal-checkout-form > .container.container,
+.order-confirmation > .container.container {
+  width: 100%;
+  max-width: 1140px;
+  margin-inline: auto;
+}
+
+/* Two-column on desktop: form sections | sticky order-summary card. The
+   .container has exactly two children — the stack of form sections and the
+   summary/Place-Order block. */
+/* Webflow puts a clearfix `::before`/`::after` (content:" "; display:table) on
+   .container and .row. Inside a CSS grid those pseudo-elements become phantom grid
+   items that steal the first cell — they were swapping the two columns and pushing
+   City/Zip out of line. Neutralise them wherever we turn the element into a grid. */
+.checkout-form > .container.container::before,
+.checkout-form > .container.container::after,
+.checkout-form .row::before,
+.checkout-form .row::after {
+  content: none;
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .checkout-form > .container.container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 48px;
+    align-items: start;
+  }
+  /* Pin each block to its column explicitly: the form sections (first child) fill
+     the wide left column, the order-summary block (last child) the right one. */
+  .checkout-form > .container.container > div:first-child {
+    grid-column: 1;
+  }
+  .checkout-form > .container.container > div:last-child {
+    grid-column: 2;
+  }
+}
+
+/* Stack the form sections with even rhythm (first child = forms column). */
+.checkout-form > .container.container > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_spacing---spacing-normal, 40px);
+}
+.checkout-form > .container.container > div:first-child > div:empty {
+  display: none;
+}
+.checkout-form form {
+  margin: 0;
+}
+
+/* Section headings + the small "* Required" note. */
+.checkout-form h5.checkout-title,
+.order-confirmation h5.checkout-title {
+  margin: 0 0 var(--_spacing---spacing-tiny, 4px);
+  color: var(--color--jet-black, #010103);
+  font-size: var(--_typography---font-size--heading-h6, 20px);
+  font-weight: var(--font-weight--semi-bold, 600);
+  letter-spacing: var(--_typography---letter-spacing-h6, -0.4px);
+  line-height: var(--line-height-l, 120%);
+}
+.checkout-form div.checkout-title {
+  margin-bottom: var(--_spacing---spacing-medium, 20px);
+  color: var(--color--gray, #575757);
+  font-size: var(--_typography---font-size--small-text, 14px);
+  font-weight: var(--font-weight--regular, 400);
+}
+
+/* Field labels. */
+.checkout-form label.checkout-title {
+  display: block;
+  margin: var(--_spacing---spacing-small-plus, 14px) 0 6px;
+  color: var(--color--jet-black, #010103);
+  font-size: var(--_typography---font-size--small-text, 14px);
+  font-weight: var(--font-weight--medium, 500);
+}
+
+.checkout-form fieldset,
+.order-confirmation fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Inputs, selects, textareas. */
+.checkout-form input:not([type="radio"]):not([type="checkbox"]),
+.checkout-form select,
+.checkout-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  margin-bottom: var(--_spacing---spacing-small-plus, 14px);
+  padding: 0 16px;
+  color: var(--color--jet-black, #010103);
+  font-family: var(--font-family--primary-font, "Inter Tight", sans-serif);
+  font-size: var(--_typography---font-size--paragraph, 16px);
+  background-color: var(--color--white, #fff);
+  border: 1px solid var(--color--light-gray, #f1f1f1);
+  border-radius: var(--_typography---radius--radius-xs, 10px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.checkout-form textarea {
+  height: auto;
+  min-height: 96px;
+  padding: 14px 16px;
+}
+.checkout-form input:not([type="radio"]):not([type="checkbox"]):focus,
+.checkout-form select:focus,
+.checkout-form textarea:focus {
+  outline: none;
+  border-color: var(--color--jet-black, #010103);
+  box-shadow: 0 0 0 3px rgba(1, 1, 3, 0.06);
+}
+
+/* City / State / Zip row. */
+.checkout-form .row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--_spacing---spacing-small-plus, 14px);
+}
+@media (max-width: 600px) {
+  .checkout-form .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Shipping-method radio reads as a selectable row. */
+.checkout-form fieldset label:has(> input[type="radio"]) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--color--light-gray, #f1f1f1);
+  border-radius: var(--_typography---radius--radius-xs, 10px);
+  cursor: pointer;
+}
+
+/* Payment placeholders: the template left empty <div> pairs (each holding a
+   .reveal node) where the Webflow card inputs used to be. Render them as faux
+   input boxes so the section looks complete, and hide the leftover .reveal. */
+.checkout-form div:has(> div.reveal) {
+  box-sizing: border-box;
+  height: 52px;
+  margin-bottom: var(--_spacing---spacing-small-plus, 14px);
+  background-color: var(--color--white, #fff);
+  border: 1px solid var(--color--light-gray, #f1f1f1);
+  border-radius: var(--_typography---radius--radius-xs, 10px);
+}
+.checkout-form fieldset > div:has(.reveal):not(:has(> div.reveal)) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--_spacing---spacing-small-plus, 14px);
+}
+.checkout-form div.reveal {
+  display: none;
+}
+
+/* ----- Order summary card (second child of the grid) ----- */
+.checkout-form > .container.container > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_spacing---spacing-medium, 20px);
+  padding: var(--_spacing---spacing-regular, 30px);
+  background-color: var(--color--snow-gray, #f7f7f7);
+  border: 1px solid var(--color--light-gray, #f1f1f1);
+  border-radius: var(--_typography---radius--radius-m, 16px);
+}
+@media (min-width: 992px) {
+  .checkout-form > .container.container > div:last-child {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+/* Subtotal / total rows. */
+.checkout-form fieldset.checkout-title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  color: var(--color--gray, #575757);
+  font-size: var(--_typography---font-size--paragraph, 16px);
+}
+.checkout-form fieldset.checkout-title > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.checkout-form fieldset.checkout-title > div:empty {
+  display: none;
+}
+.checkout-form fieldset.checkout-title .bold-text {
+  color: var(--color--jet-black, #010103);
+  font-size: var(--_typography---font-size--paragraph-large, 18px);
+  font-weight: var(--font-weight--semi-bold, 600);
+}
+.checkout-form fieldset.checkout-title > div:nth-child(2) {
+  padding-top: 12px;
+  border-top: 1px solid var(--color--light-gray, #f1f1f1);
+}
+
+/* Place Order button (styles.css already gives it the black fill + radius). */
+.checkout-form .checkout-submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  color: var(--color--white, #fff);
+  font-size: var(--_typography---font-size--paragraph, 16px);
+  font-weight: var(--font-weight--medium, 500);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.checkout-form .checkout-submit-button:hover {
+  opacity: 0.88;
+}
+
+/* Items list (cart-derived rows are styled in styles.css). */
+.checkout-form [data-checkout-items] {
+  display: flex;
+  flex-direction: column;
+}

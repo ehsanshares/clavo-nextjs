@@ -1,0 +1,31 @@
+---
+title: "Anox"
+slug: "anox"
+client: "Lucas"
+year: "2024"
+type: "Art Direction / Web App Design"
+heroImage: "/assets/images/Work-Single-image.webp"
+order: 0
+---
+
+**Project Description**
+
+Since Linear's inception we've proactively invested our foundation always anticipating potential future bottlenecks. This approach allows us to develop a robust infrastructure and application framework without resorting to rushed subpar solutions when scaling challenges arise. This forward-thinking mindset is also why we chose to implement multi-region infrastructure earlier than most companies typically would.
+
+![Anox](/assets/images/Work-Second-image.webp)
+
+![Anox](/assets/images/Work-Third-image.webp)
+
+![Anox](/assets/images/Work-Fourth-image.webp)
+
+![Anox](/assets/images/Work-Fifth-image.webp)
+
+**The Challenges**
+
+- We always begin by creating a shared record in the authentication service and then use the returned ID to create a matching record in the regional database.
+
+- Deletion operates similarly to record creation but includes an added safeguard: Postgres triggers generate an audit log for deleted records. This ensures that even records removed through foreign key cascades.
+
+**Execution**
+
+After experimenting with several options for the internal API between the API service and the authentication service, we ultimately chose Graph. While it isn't the most ideal choice for service-to-service communication, we already had solid Graph tooling in place (since our public API uses Graph. Additionally, we leveraged Zeus to generate a type-safe client, allowing the API service to interact with the authentication service seamlessly.
