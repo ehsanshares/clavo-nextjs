@@ -3,6 +3,8 @@
 A production-ready creative / design-agency template built on **Next.js 16**
 (App Router) + **React 19** + **TypeScript**. 37 pages, no CMS or backend required.
 
+**Live demo:** https://clavo-peach.vercel.app
+
 Full documentation is in `documentation/index.html` (in the download).
 
 ## Approach
